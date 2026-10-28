@@ -1,0 +1,43 @@
+# A sample job for rent_analysis.
+
+resources:
+  jobs:
+    property_loader_job:
+      name: property_loader_job
+
+      #email_notifications:
+      #  on_failure:
+      #    - your_email@example.com
+
+      parameters:
+        - name: catalog_name
+          default: ${var.catalog_name}
+        - name: technical_catalog_name
+          default: ${var.technical_catalog_name}
+        - name: bronze_schema_name
+          default: ${var.bronze_schema_name}
+        - name: source_data_schema_name
+          default: ${var.source_data_schema_name}
+
+      tasks:
+        - task_key: load_bronze_airbnb
+          environment_key: default
+          python_wheel_task:
+            entry_point: load_bronze_airbnb
+            package_name: rent_analysis
+
+        - task_key: load_bronze_kamernet
+          environment_key: default
+          python_wheel_task:
+            entry_point: load_bronze_kamernet
+            package_name: rent_analysis
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
+            dependencies:
+              # By default we just include the .whl file generated for the rent_analysis package.
+              # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
+              # for more information on how to add other libraries.
+              - ../dist/*.whl

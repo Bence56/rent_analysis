@@ -1,6 +1,6 @@
 [project]
 name = "rent_analysis"
-version = "0.0.1"
+version = "0.0.2"
 authors = [{ name = "bencesomogyi56@gmail.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
@@ -21,8 +21,8 @@ dev = [
 ]
 
 [project.scripts]
-main = "rent_analysis.main:main"
-
+load_bronze_airbnb = "rent_analysis.tasks.bronze_airbnb_loader:BronzeAirbnbLoader.execute_task"
+load_bronze_kamernet = "rent_analysis.tasks.bronze_kamernet_loader:BronzeKamernetLoader.execute_task"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

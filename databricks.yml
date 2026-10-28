@@ -15,10 +15,14 @@ artifacts:
 
 # Variable declarations. These variables are assigned in the dev/prod targets below.
 variables:
-  catalog:
-    description: The catalog to use
-  schema:
-    description: The schema to use
+  catalog_name:
+    description: The catalog to use for the bronze job
+  technical_catalog_name:
+    description: The catalog containing source data volumes
+  bronze_schema_name:
+    description: The schema to use for bronze tables
+  source_data_schema_name:
+    description: The schema containing source data volumes
 
 targets:
   dev:
@@ -31,8 +35,13 @@ targets:
     workspace:
       host: https://dbc-45bf58f8-78cd.cloud.databricks.com
     variables:
-      catalog: workspace
-      schema: ${workspace.current_user.short_name}
+      catalog_name: rent_analysis
+      technical_catalog_name: technical
+      bronze_schema_name: bronze
+      # silver_schema_name: silver
+      # gold_schema_name: gold
+      source_data_schema_name: source_data
+
   prod:
     mode: production
     workspace:
