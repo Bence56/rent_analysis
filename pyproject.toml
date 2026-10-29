@@ -4,11 +4,17 @@ version = "0.0.4"
 authors = [{ name = "bencesomogyi56@gmail.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
+    "bandit>=1.9.4",
+    "mypy>=2.4.1",
+    "pre-commit>=4.6.2",
     # Any dependencies for jobs and pipelines in this project can be added here
     # See also https://docs.databricks.com/dev-tools/bundles/library-dependencies
     #
     # LIMITATION: for pipelines, dependencies are cached during development;
     # add dependencies to the 'environment' section of your pipeline.yml file instead
+    "pyright>=1.1.414",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.3",
 ]
 
 [dependency-groups]
@@ -37,3 +43,7 @@ packages = ["src/rent_analysis"]
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
+extend-select = ["D"]
+ignore = ["D203", "D213"]
