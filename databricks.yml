@@ -21,8 +21,15 @@ variables:
     description: The catalog containing source data volumes
   bronze_schema_name:
     description: The schema to use for bronze tables
+  silver_schema_name:
+    description: The schema to use for silver tables
+  gold_schema_name:
+    description: The schema to use for gold tables
   source_data_schema_name:
     description: The schema containing source data volumes
+  warehouse_id:
+    description: The SQL warehouse used to run dashboards
+    default: 38feb426d0b5fbe9
 
 targets:
   dev:
@@ -38,8 +45,8 @@ targets:
       catalog_name: rent_analysis
       technical_catalog_name: technical
       bronze_schema_name: bronze
-      # silver_schema_name: silver
-      # gold_schema_name: gold
+      silver_schema_name: silver
+      gold_schema_name: gold
       source_data_schema_name: source_data
 
   prod:
