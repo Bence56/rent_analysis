@@ -1,0 +1,708 @@
+{
+  "datasets": [
+    {
+      "name": "4cf4f5ef",
+      "displayName": "revenue_per_property",
+      "config": {
+        "version": "1.1",
+        "source": "rent_analysis.gold.revenue_per_property",
+        "dimensions": [
+          {
+            "name": "postal_code",
+            "expr": "postal_code"
+          },
+          {
+            "name": "latitude",
+            "expr": "latitude"
+          },
+          {
+            "name": "longitude",
+            "expr": "longitude"
+          },
+          {
+            "name": "room_type",
+            "expr": "room_type"
+          },
+          {
+            "name": "price",
+            "expr": "price"
+          },
+          {
+            "name": "source",
+            "expr": "source.`source`"
+          },
+          {
+            "name": "revenue_per_year",
+            "expr": "revenue_per_year"
+          },
+          {
+            "name": "revenue_per_5_years",
+            "expr": "revenue_per_5_years"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "1330983a",
+      "displayName": "property_statistics_per_district",
+      "config": {
+        "version": "1.1",
+        "source": "rent_analysis.gold.property_statistics_per_district",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "877dc35b",
+      "displayName": "Basic diagrams",
+      "layout": [
+        {
+          "widget": {
+            "name": "avg_price_by_postal",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "postal_code",
+                      "expression": "`postal_code`"
+                    },
+                    {
+                      "name": "avg(price)",
+                      "expression": "AVG(`price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Average Price by Postal Code"
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "postal_code",
+                  "scale": {
+                    "type": "categorical",
+                    "categorySize": {
+                      "type": "number-of-categories",
+                      "number": 20
+                    },
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "avg(price)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "EUR",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Average Price (EUR)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "select-postal-codes",
+            "queries": [
+              {
+                "name": "dashboards/01f1d386df5e198b9f4d8deb30216857/datasets/01f1d38ae7f21683a84c1d61f9f5953e_postal_code",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "postal_code",
+                      "expression": "`postal_code`"
+                    },
+                    {
+                      "name": "postal_code_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Select Postal codes",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "postal_code",
+                    "queryName": "dashboards/01f1d386df5e198b9f4d8deb30216857/datasets/01f1d38ae7f21683a84c1d61f9f5953e_postal_code"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "3644b03a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "room_type",
+                      "expression": "`room_type`"
+                    },
+                    {
+                      "name": "min(price)",
+                      "expression": "MIN(`price`)"
+                    },
+                    {
+                      "name": "q1(price)",
+                      "expression": "PERCENTILE(`price`, 0.25)"
+                    },
+                    {
+                      "name": "median(price)",
+                      "expression": "MEDIAN(`price`)"
+                    },
+                    {
+                      "name": "q3(price)",
+                      "expression": "PERCENTILE(`price`, 0.75)"
+                    },
+                    {
+                      "name": "max(price)",
+                      "expression": "MAX(`price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "room_type",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(price)"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(price)"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(price)"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(price)"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(price)"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 13,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "2add987e",
+            "queries": [
+              {
+                "name": "combo_primary_1",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "revenue_per_5_years",
+                      "expression": "`revenue_per_5_years`"
+                    },
+                    {
+                      "name": "measure(count)",
+                      "expression": "MEASURE(`count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "combo_primary_2",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "revenue_per_5_years",
+                      "expression": "`revenue_per_5_years`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "combo",
+              "encodings": {
+                "x": {
+                  "fieldName": "revenue_per_5_years",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "layers": [
+                    {
+                      "visual": "bar",
+                      "encodings": {
+                        "value": {
+                          "fields": [
+                            {
+                              "fieldName": "measure(count)"
+                            }
+                          ]
+                        }
+                      },
+                      "queryName": "combo_primary_1"
+                    },
+                    {
+                      "visual": "line",
+                      "encodings": {},
+                      "queryName": "combo_primary_2"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 1,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "b81dc204",
+            "queries": [
+              {
+                "name": "combo_primary_1",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "revenue_per_year",
+                      "expression": "`revenue_per_year`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "combo_primary_2",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "revenue_per_year",
+                      "expression": "`revenue_per_year`"
+                    },
+                    {
+                      "name": "count(revenue_per_year)",
+                      "expression": "COUNT(`revenue_per_year`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "combo",
+              "encodings": {
+                "x": {
+                  "fieldName": "revenue_per_year",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "layers": [
+                    {
+                      "visual": "bar",
+                      "encodings": {},
+                      "queryName": "combo_primary_1"
+                    },
+                    {
+                      "visual": "line",
+                      "encodings": {
+                        "value": {
+                          "fields": [
+                            {
+                              "fieldName": "count(revenue_per_year)"
+                            }
+                          ]
+                        }
+                      },
+                      "queryName": "combo_primary_2"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "143fdd64",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "f1d1ec0a",
+            "spec": {
+              "encodings": {
+                "fields": []
+              },
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "f3d7ef68",
+      "displayName": "Maps",
+      "layout": [
+        {
+          "widget": {
+            "name": "map-displaying-prices",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4cf4f5ef",
+                  "fields": [
+                    {
+                      "name": "price",
+                      "expression": "`price`"
+                    },
+                    {
+                      "name": "latitude",
+                      "expression": "`latitude`"
+                    },
+                    {
+                      "name": "longitude",
+                      "expression": "`longitude`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Map Displaying prices",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "mark": {
+                "opacity": 0.87,
+                "size": -2.1
+              },
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "latitude"
+                  },
+                  "longitude": {
+                    "fieldName": "longitude"
+                  }
+                },
+                "color": {
+                  "fieldName": "price",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "single-hue",
+                      "baseColor": {
+                        "themeColorType": "visualizationColors",
+                        "position": 4
+                      }
+                    },
+                    "reverse": false
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 12
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "e97dfe6e",
+      "displayName": "District statistics",
+      "layout": [
+        {
+          "widget": {
+            "name": "24699815",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "1330983a",
+                  "fields": [
+                    {
+                      "name": "postal_code",
+                      "expression": "`postal_code`"
+                    },
+                    {
+                      "name": "min_price",
+                      "expression": "`min_price`"
+                    },
+                    {
+                      "name": "max_price",
+                      "expression": "`max_price`"
+                    },
+                    {
+                      "name": "avg_price",
+                      "expression": "`avg_price`"
+                    },
+                    {
+                      "name": "p25_price",
+                      "expression": "`p25_price`"
+                    },
+                    {
+                      "name": "median_price",
+                      "expression": "`median_price`"
+                    },
+                    {
+                      "name": "p75_price",
+                      "expression": "`p75_price`"
+                    },
+                    {
+                      "name": "properties_in_district",
+                      "expression": "`properties_in_district`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "postal_code"
+                  },
+                  {
+                    "fieldName": "min_price"
+                  },
+                  {
+                    "fieldName": "max_price"
+                  },
+                  {
+                    "fieldName": "avg_price"
+                  },
+                  {
+                    "fieldName": "p25_price"
+                  },
+                  {
+                    "fieldName": "median_price"
+                  },
+                  {
+                    "fieldName": "p75_price"
+                  },
+                  {
+                    "fieldName": "properties_in_district"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "postal-code",
+            "queries": [
+              {
+                "name": "dashboards/01f1d386df5e198b9f4d8deb30216857/datasets/01f1d3d509221904853a8ffa898f264c_postal_code",
+                "query": {
+                  "datasetName": "1330983a",
+                  "fields": [
+                    {
+                      "name": "postal_code",
+                      "expression": "`postal_code`"
+                    },
+                    {
+                      "name": "postal_code_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Postal code",
+                  "fields": []
+                }
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "postal_code",
+                    "queryName": "dashboards/01f1d386df5e198b9f4d8deb30216857/datasets/01f1d3d509221904853a8ffa898f264c_postal_code"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
