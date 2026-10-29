@@ -1,12 +1,16 @@
+"""Load Airbnb source data into the bronze layer."""
+
 from databricks.sdk.runtime import spark
 
 from rent_analysis.utils.loader_argument_parser import LoaderArgumentParser
 
 
 class BronzeAirbnbLoader:
+    """Load raw Airbnb data into the bronze table."""
 
     @staticmethod
     def execute_task():
+        """Read the Airbnb CSV and overwrite its bronze table."""
         args = LoaderArgumentParser.parse_args(description="Load Airbnb data into the bronze layer.")
         df = spark.read.csv(
             f"/Volumes/{args.technical_catalog_name}/{args.source_data_schema_name}/airbnb/airbnb.csv",

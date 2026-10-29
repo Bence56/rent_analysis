@@ -200,9 +200,7 @@ def test_gold_statistics_loader_uses_arguments_and_writes_district_statistics(mo
 
     gold_statistics_per_district.GoldStatisticsPerDistrictLoader.execute_task()
 
-    parse_args.assert_called_once_with(
-        description="Load property statistics per district into the gold layer."
-    )
+    parse_args.assert_called_once_with(description="Load property statistics per district into the gold layer.")
     load_properties.assert_called_once_with(spark, "test_catalog", "silver_test")
     properties.groupBy.assert_called_once_with("postal_code")
     grouped.agg.assert_called_once()

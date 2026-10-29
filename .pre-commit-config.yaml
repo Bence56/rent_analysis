@@ -1,0 +1,45 @@
+exclude: ^(scratch/.*\.ipynb|tests/.*)$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-ast
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-json
+      - id: pretty-format-json
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml, -r, src]
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright type checking
+        entry: python -m pyright src
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: pytest-coverage
+        name: pytest coverage
+        entry: "python -m pytest --cov=src/ --cov-report=term-missing --cov-fail-under=80"
+        language: system
+        pass_filenames: false

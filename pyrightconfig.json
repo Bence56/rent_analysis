@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "**/__pycache__"
+  ],
+  "include": [
+    "src",
+    "tests"
+  ],
+  "pythonVersion": "3.10",
+  "reportMissingImports": false,
+  "reportMissingTypeStubs": false,
+  "typeCheckingMode": "strict"
+}
