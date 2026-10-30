@@ -1,13 +1,13 @@
 # Data pipeline and CI/CD
 
-## Data flow
+## Data lineage
 
 The Spark Declarative Pipeline loads both sources and derives bronze, silver,
-and gold materialized views. Each output is published to the configured schema;
-prefixes distinguish the intermediate datasets.
+and gold materialized views. The gold tables are published to the configured
+catalog and schema, where the manager dashboard reads them as datasets.
 
 ```mermaid
-flowchart TD
+flowchart LR
     AirbnbSource["Airbnb CSV<br/>Unity Catalog volume"]
     KamernetSource["Kamernet JSON<br/>Unity Catalog volume"]
 
@@ -20,6 +20,9 @@ flowchart TD
     Combined["Align and union<br/>Airbnb + Kamernet properties"]
     Revenue["Gold: revenue_per_property<br/>annual and 5-year estimates"]
     DistrictStats["Gold: property_statistics_per_district<br/>postal-code price statistics"]
+    DashboardRevenue["Dashboard dataset<br/>revenue_per_property"]
+    DashboardDistricts["Dashboard dataset<br/>property_statistics_per_district"]
+    Dashboard["Rent analysis manager's Dashboard"]
 
     AirbnbSource --> BronzeAirbnb --> SilverAirbnb
     KamernetSource --> BronzeKamernet --> SilverKamernet
@@ -27,10 +30,9 @@ flowchart TD
     SilverKamernet --> Combined
     Combined --> Revenue
     Combined --> DistrictStats
+    Revenue --> DashboardRevenue --> Dashboard
+    DistrictStats --> DashboardDistricts --> Dashboard
 ```
-
-The gold tables are published to the configured catalog and gold schema. The
-dashboard reads from that schema.
 
 ## CI/CD pipeline
 
