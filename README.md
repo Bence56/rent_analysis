@@ -34,35 +34,30 @@ pushes to `main`. The pytest hook enforces at least 80% test coverage. On pushes
 to `main` (and manual runs from `main`), it also builds the wheel and deploys
 the Databricks bundle to the `dev` target.
 
-### Configure GitHub OIDC authentication
+### Configure Databricks service-principal authentication
 
-The deployment uses GitHub's short-lived OIDC identity tokens. It does not need
-a stored Databricks token or client secret.
+The deployment uses Databricks OAuth machine-to-machine (M2M) authentication
+for the service principal. It does not require an account-level federation
+policy.
 
-1. In the Databricks account console, create a service principal for this
-   deployment. Add it to the target workspace and grant only the workspace,
-   bundle-resource, and Unity Catalog permissions the deployment needs. Record
-   its **application/client ID** and **numeric service principal ID**.
-2. As a Databricks account admin, create a federation policy for that principal.
-   Set the issuer to `https://token.actions.githubusercontent.com`, the audience
-   to your Databricks account ID, the subject claim to `sub`, and the subject
-   to `repo:Bence56/rent_analysis:environment:databricks-dev`.
-   The policy should be scoped to this repository and deployment environment.
-   GitHub repositories created, renamed, or transferred on or after July 15,
-   2026 can use an immutable subject containing numeric owner and repository
-   IDs instead. If that applies, use the exact `sub` format configured for your
-   repository in both the federation policy and GitHub environment settings.
-3. In GitHub, open **Settings → Environments**, create an environment named
-   `databricks-dev`, and restrict deployments to the `main` branch.
-4. In that environment's **Variables**, add:
-   * `DATABRICKS_HOST`: `https://dbc-45bf58f8-78cd.cloud.databricks.com`
-   * `DATABRICKS_CLIENT_ID`: the service principal's application/client ID
+1. Make sure the service principal is added to the target Databricks workspace
+   and has the workspace, bundle-resource, and Unity Catalog permissions needed
+   for deployment.
+2. Create an OAuth secret for the service principal in Databricks. Record its
+   application/client ID and the secret value when it is displayed; the secret
+   value may not be viewable again.
+3. In GitHub **Settings → Environments**, create an environment named
+   `databricks-dev` and restrict deployments to the `main` branch.
+4. In that environment, set:
+   * **Variable** `DATABRICKS_HOST` =
+     `https://dbc-45bf58f8-78cd.cloud.databricks.com`
+   * **Secret** `DATABRICKS_CLIENT_ID` = the service principal's application ID
+   * **Secret** `DATABRICKS_CLIENT_SECRET` = the OAuth secret value
 5. Push to `main` or run **CI/CD** manually from `main`. The deploy job runs
    only after the checks pass.
 
-For exact account-console and CLI setup instructions, see the
-[Databricks GitHub Actions OIDC guide](https://docs.databricks.com/aws/en/dev-tools/auth/provider-github)
-and [GitHub's OIDC documentation](https://docs.github.com/en/actions/concepts/security/openid-connect).
+See the [Databricks OAuth M2M guide](https://docs.databricks.com/aws/en/dev-tools/auth/oauth-m2m)
+for service-principal OAuth setup details.
 
 
 # Using this project using the CLI
