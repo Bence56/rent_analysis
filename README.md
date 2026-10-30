@@ -110,7 +110,7 @@ I uploaded the source data files to a new catalog called technical. All of the l
 
 ## Bronze layer
 
-I designed two tasks one for Airbnb data, and one for Kamernet. Both bronze table is a one of one version of the raw data as a Delta table. No coluns are dropped, all columns are strings. 
+I designed two tasks one for Airbnb data, and one for Kamernet. Both bronze table is a one of one version of the raw data as a Delta table. No coluns are dropped, all columns are strings.
 
 ## Silver layer
 Generally, I wanted to create the silver layer to have a clear business data, so more data products could use it, for example for ML use cases.
@@ -132,7 +132,7 @@ I have missed checking the duplications, that is a mistake.
 First I removed the EUR symbols and the extra spaces from all the columns that stored an amount of money. By this way we could convert them into numeric columns, which are easier to use for calculations.
 
 
-The next step was type conversion and filling the None values in the numeric columns. 
+The next step was type conversion and filling the None values in the numeric columns.
 
 
 The last step was selecting only the useful columns, which are storing business values. I dropped technical or metadata columns from the crawler.
@@ -145,12 +145,12 @@ I designed two tables. The first one should answer the question of every propert
 
 The second one contains some statistics of the districts.
 
-# pre-commit 
+# pre-commit
 
 Checks I implemented:
 - Dock strings
 - 80% unit test code coverage
-- typehinting 
+- typehinting
 
 # CI/CD pipeline
 
