@@ -1,14 +1,14 @@
-"""Argument parser for loader tasks."""
+"""Command-line argument parsing shared by the loader tasks."""
 
 import argparse
 
 
 class LoaderArgumentParser:
-    """Argument parser for loader tasks."""
+    """Build the common command-line arguments used by loaders."""
 
     @staticmethod
     def parse_args(description: str) -> argparse.Namespace:
-        """Parse command line arguments for loader tasks."""
+        """Parse loader arguments using the supplied command description."""
         parser = argparse.ArgumentParser(description=description)
         parser.add_argument("--catalog_name", type=str, required=False, help="Catalog name.")
         parser.add_argument(

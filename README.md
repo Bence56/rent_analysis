@@ -27,6 +27,18 @@ If you're developing with an IDE, dependencies for this project should be instal
    It's an alternative to tools like pip: https://docs.astral.sh/uv/getting-started/installation/.
 *  Run `uv sync --dev` to install the project's dependencies.
 
+## GitHub Actions CI/CD
+
+The CI/CD workflow runs every configured pre-commit hook on pull requests and
+pushes to `main`. The pytest hook enforces at least 80% test coverage. On pushes
+to `main` (and manual runs from `main`), it also builds the wheel and deploys
+the Databricks bundle to the `dev` target.
+
+Add the following repository secrets to enable deployment:
+
+* `DATABRICKS_HOST`: the URL of the Databricks workspace.
+* `DATABRICKS_TOKEN`: a token authorized to deploy the bundle.
+
 
 # Using this project using the CLI
 

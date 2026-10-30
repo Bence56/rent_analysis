@@ -1,0 +1,51 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install project dependencies
+        run: uv sync --locked --dev
+
+      - name: Run all pre-commit hooks
+        env:
+          COVERAGE_FILE: ${{ runner.temp }}/rent-analysis-coverage
+        run: uv run pre-commit run --all-files
+
+      - name: Set up Databricks CLI
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: databricks/setup-cli@main
+
+      - name: Deploy bundle and wheel to Databricks
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle deploy --target dev
