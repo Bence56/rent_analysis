@@ -11,6 +11,7 @@ repos:
       - id: check-merge-conflict
       - id: check-json
       - id: pretty-format-json
+        exclude: ^dashboards/.*\.lvdash\.json$
       - id: debug-statements
       - id: end-of-file-fixer
       - id: trailing-whitespace
