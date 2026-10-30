@@ -1,4 +1,4 @@
-exclude: ^(scratch/.*\.ipynb|tests/.*)$
+exclude: ^(scratch/.*\.ipynb|tests/.*|dashboards/.*)$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
