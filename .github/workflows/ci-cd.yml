@@ -15,8 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  checks-and-deploy:
+  checks:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -39,13 +41,26 @@ jobs:
           COVERAGE_FILE: ${{ runner.temp }}/rent-analysis-coverage
         run: uv run pre-commit run --all-files
 
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: checks
+    runs-on: ubuntu-latest
+    environment: databricks-dev
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DATABRICKS_AUTH_TYPE: github-oidc
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ vars.DATABRICKS_CLIENT_ID }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Set up Databricks CLI
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: databricks/setup-cli@main
 
       - name: Deploy bundle and wheel to Databricks
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: databricks bundle deploy --target dev
