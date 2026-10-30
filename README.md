@@ -34,10 +34,35 @@ pushes to `main`. The pytest hook enforces at least 80% test coverage. On pushes
 to `main` (and manual runs from `main`), it also builds the wheel and deploys
 the Databricks bundle to the `dev` target.
 
-Add the following repository secrets to enable deployment:
+### Configure GitHub OIDC authentication
 
-* `DATABRICKS_HOST`: the URL of the Databricks workspace.
-* `DATABRICKS_TOKEN`: a token authorized to deploy the bundle.
+The deployment uses GitHub's short-lived OIDC identity tokens. It does not need
+a stored Databricks token or client secret.
+
+1. In the Databricks account console, create a service principal for this
+   deployment. Add it to the target workspace and grant only the workspace,
+   bundle-resource, and Unity Catalog permissions the deployment needs. Record
+   its **application/client ID** and **numeric service principal ID**.
+2. As a Databricks account admin, create a federation policy for that principal.
+   Set the issuer to `https://token.actions.githubusercontent.com`, the audience
+   to your Databricks account ID, the subject claim to `sub`, and the subject
+   to `repo:Bence56/rent_analysis:environment:databricks-dev`.
+   The policy should be scoped to this repository and deployment environment.
+   GitHub repositories created, renamed, or transferred on or after July 15,
+   2026 can use an immutable subject containing numeric owner and repository
+   IDs instead. If that applies, use the exact `sub` format configured for your
+   repository in both the federation policy and GitHub environment settings.
+3. In GitHub, open **Settings → Environments**, create an environment named
+   `databricks-dev`, and restrict deployments to the `main` branch.
+4. In that environment's **Variables**, add:
+   * `DATABRICKS_HOST`: `https://dbc-45bf58f8-78cd.cloud.databricks.com`
+   * `DATABRICKS_CLIENT_ID`: the service principal's application/client ID
+5. Push to `main` or run **CI/CD** manually from `main`. The deploy job runs
+   only after the checks pass.
+
+For exact account-console and CLI setup instructions, see the
+[Databricks GitHub Actions OIDC guide](https://docs.databricks.com/aws/en/dev-tools/auth/provider-github)
+and [GitHub's OIDC documentation](https://docs.github.com/en/actions/concepts/security/openid-connect).
 
 
 # Using this project using the CLI
